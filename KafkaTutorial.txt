@@ -1,0 +1,92 @@
+What is Kafka?? 
+ -> Kafka is just like a messaging system.
+ -> It act as a broker or act as queue 
+ -> It is distributed platform/application
+    
+        Kafka Server(Software) listens to a particular port or an IP
+        Producer -> sends message to kafka server.
+                 -> generate some messages and those messages are published to Kafka Server
+                 -> There can be multiple Producer that can generate messages and publish their
+                        msgs to Kafka Server.
+                
+        Consumer -> It can consume messages from Kafka cluster.
+
+
+-> In production env Kafka is refered as Kafka Cluster.
+-> A cluster is made up of more than one kafka server.
+-> Each Kafka server is referred as broker.
+
+        Node1: broker1
+        Node2: broker2
+        Node3: broker3
+
+    --> combination of these 3 kafka server is called Kafka Cluster.
+    --> Data is distributed in kafka cluster.
+
+ --> Kafka is fualt-tolerant : Ability of a system to continue without interruption when one or
+        more of its components fail.
+ --> In Kafka cluster messages are replicated in multiple broker.(Replication Factor)
+ --> Kafka is scalable system.(You can add new broker)
+                            --> You can increase the numer of consumers.
+    (1 million throughput in a sec)
+
+Why Kafka is Important? -|^
+
+
+Kafka Architecture :
+-------------------------------
+
+    Kafka Server:
+            Topics: -> can have multiple topics inside kafka server and
+                        it can have multiple partitions.
+            Publiser(P1/P2) : Each kafka server can have multiple kafka publisher/producer and can
+                    publish to multiple partition of the topic
+            Consumer group: Each kafka server can have multiple consumer group inside kafka ecosystem
+                        Each Consumer group can have multiple consumers(C1/C2).
+            
+            CG1: C1  C2
+            CG2: C3
+            These consumer can consume directly from topic.
+            -> A consumer cannot hang individually.
+                It has to be associated/registered with a Consumer group
+
+            Zookeeper: It is a distributed, open-source configuration, synchronization service.
+                        (configuration managaement system)
+                    All the data (CG/C/topic) are stored in zookeeper.
+                    so, if there is any changes in configuration in kafka server it synchronizes with everything.
+
+                        -> which messages consumer has been read
+                        -> Cluster Information(location/Ip address)
+                        -> Topic configuration.
+
+Install :
+    Download Software
+    find both zookeeper and kafka server
+        Need to change according to your system
+        ========================================
+        Kafka -> conf file = server.properties
+        - advertised.listeners=PLAINTEXT://[server-ip-address]:9092
+        
+        Zookeeper -> conf file = zookeeper.properties
+        - zookeeper.connect=localhost:2181 
+        ========================================
+        Start zookeeper using : 
+        - bin/zookeeper-server-start.sh config/zookeeper.properties
+        Start Kafka using : 
+        - JMX_PORT=8004 bin/kafka-server-start.sh config/server.properties 
+    
+Install Kafka Manager:
+    (GUI) to view Kafka Cluster
+    Pre-req: Java11
+    clone repository :  https://github.com/yahoo/CMAK
+    -> go inside CMAK folder
+    run: ./sbt clean dist
+    --> target folder is created
+        --> go inside universal folder
+        --> unzip cmak*
+        --> cd cmak/bin
+    --> Change the configuration in application.conf
+        - cmak.zkhosts=“zookeeper-host:2181" 
+
+    --> Start the server using
+        - bin/cmak -Dconfig.file=conf/application.conf -Dhttp.port=8080
